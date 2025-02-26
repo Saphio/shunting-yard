@@ -6,13 +6,11 @@ using namespace std;
 Node::Node () {
   left = NULL;
   right = NULL;
-  value = 0;
+  value = '0';
 }
 
-Node::Node (Node* l, Node* r, int v) {
-  left = l;
-  right = r;
-  value = v;
+Node::Node (char c) {
+  value = c;
 }
 
 Node::~Node () {
@@ -23,11 +21,11 @@ Node::~Node () {
 }
 
 // setters
-void setLeft (Node* l) { left = l; }
-void setRight (Node* r) { right = r; }
-void setValue (int v) { value = v; }
+void Node::setLeft (Node* l) { left = l; }
+void Node::setRight (Node* r) { right = r; }
+void Node::setValue (char v) { value = v; }
 
 // getters
-Node* getLeft () { return left; }
-Node* getRight () { return right; }
-int getValue () { return value; }
+Node* Node::getLeft () { return left; }
+Node* Node::getRight () { return right; }
+char Node::getValue () { return value; }

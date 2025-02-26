@@ -1,4 +1,5 @@
 #include "Stack.h"
+#include "Node.h"
 
 using namespace std;
 
@@ -10,43 +11,44 @@ Stack::Stack (Node* n) {
   head = n;
 }
 
-void push (Node* n) {
+void Stack::push (Node* n) {
   Node* cur = head;
   if (head == NULL) {
     head = n;
   }
   else {
-    while (cur.getRight() != NULL) {
-      cur = cur.getRight();
+    while (cur->getRight() != NULL) {
+      cur = cur->getRight();
     }
-    cur.setRight(n);
+    cur->setRight(n);
   }
   return;
 }
 
-Node* pop () {
-  Node* prev = head, cur = head;
-  if (head == NULL) {
-    return NULL;
-  }
-  else {
-    while (cur.getRight != NULL) {
-      if (cur != head) { prev = cur.getRight(); }
-      cur = cur.getRight();
-    }
-    prev.setRight(NULL);
-    return cur;
-  }
-}
-
-Node* peek () {
+Node* Stack::pop () {
+  Node* prev = head;
   Node* cur = head;
   if (head == NULL) {
     return NULL;
   }
   else {
-    while (cur.getRight != NULL) {
-      cur = cur.getRight();
+    while (cur->getRight != NULL) {
+      if (cur != head) { prev = cur->getRight(); }
+      cur = cur->getRight();
+    }
+    prev->setRight(NULL);
+    return cur;
+  }
+}
+
+Node* Stack::peek () {
+  Node* cur = head;
+  if (head == NULL) {
+    return NULL;
+  }
+  else {
+    while (cur->getRight != NULL) {
+      cur = cur->getRight();
     }
     return cur;
   }

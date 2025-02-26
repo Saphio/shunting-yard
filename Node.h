@@ -7,19 +7,19 @@ class Node {
  public:
   // constructors
   Node (); 
-  Node (Node* l, Node* r, int v);
+  Node (char c);
   ~Node (); 
   // getters and setters
   void setLeft (Node* l);
   void setRight (Node* r);
-  void setValue (int v);
+  void setValue (char v);
   Node* getLeft ();
   Node* getRight ();
-  int getValue ();
+  char getValue ();
  private:
   Node* left;
   Node* right;
-  int value;
+  char value;
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include "Queue.h"
+#include "Node.h"
 
 using namespace std;
 
@@ -11,28 +12,28 @@ Queue::Queue (Node* n) {
 }
 
 // enqueue a node
-void enqueue (Node* n) {
+void Queue::enqueue (Node* n) {
   Node* cur = head;
   if (head == NULL) {
     head = cur;
   }
   else {
-    while (cur.getRight() != NULL) {
-      cur = cur.getRight();
+    while (cur->getRight() != NULL) {
+      cur = cur->getRight();
     }
-    cur.setRight(n);
+    cur->setRight(n);
   }
   return;
 }
 
 // dequeue the first node
-Node* dequeue () {
+Node* Queue::dequeue () {
   Node* cur = head;
   if (head == NULL) { // nothing in the list
     return NULL;
   }
   else { // head.getRight = NULL or has a value
-    head = head.getRight();
+    head = head->getRight();
     return cur;
   }
 }
