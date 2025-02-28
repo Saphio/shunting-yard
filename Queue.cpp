@@ -1,5 +1,6 @@
 #include "Queue.h"
 #include "Node.h"
+#include <cstddef>
 
 using namespace std;
 
@@ -15,7 +16,7 @@ Queue::Queue (Node* n) {
 void Queue::enqueue (Node* n) {
   Node* cur = head;
   if (head == NULL) {
-    head = cur;
+    head = n;
   }
   else {
     while (cur->getRight() != NULL) {
@@ -36,4 +37,9 @@ Node* Queue::dequeue () {
     head = head->getRight();
     return cur;
   }
+}
+
+// getter
+Node* Queue::getHead () {
+  return head;
 }

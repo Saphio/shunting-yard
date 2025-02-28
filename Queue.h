@@ -13,6 +13,8 @@ class Queue {
   // queue functions
   void enqueue (Node* n);
   Node* dequeue ();
+  // getter
+  Node* getHead ();
  private:
   Node* head;
 };

@@ -1,4 +1,5 @@
 #include "Node.h"
+#include <cstddef>
 
 using namespace std;
 
@@ -14,8 +15,8 @@ Node::Node (char c) {
 }
 
 Node::~Node () {
-  delete &left;
-  delete &right;
+  delete left;
+  delete right;
   left = NULL;
   right = NULL;
 }

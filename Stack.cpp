@@ -1,5 +1,6 @@
 #include "Stack.h"
 #include "Node.h"
+#include <cstddef>
 
 using namespace std;
 
@@ -31,10 +32,15 @@ Node* Stack::pop () {
   if (head == NULL) {
     return NULL;
   }
+  else if (head->getRight() == NULL) {
+    head = NULL;
+    return cur;
+  }
   else {
-    while (cur->getRight != NULL) {
-      if (cur != head) { prev = cur->getRight(); }
+    cur = cur->getRight();
+    while (cur->getRight() != NULL) {
       cur = cur->getRight();
+      prev = prev->getRight();
     }
     prev->setRight(NULL);
     return cur;
@@ -47,10 +53,14 @@ Node* Stack::peek () {
     return NULL;
   }
   else {
-    while (cur->getRight != NULL) {
+    while (cur->getRight() != NULL) {
       cur = cur->getRight();
     }
     return cur;
   }
 }
   
+// getter
+Node* Stack::getHead () {
+  return head;
+}

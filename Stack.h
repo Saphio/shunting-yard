@@ -14,6 +14,8 @@ class Stack {
   void push (Node* n);
   Node* pop ();
   Node* peek ();
+  // getter
+  Node* getHead ();
  private:
   Node* head;
 };

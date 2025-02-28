@@ -23,14 +23,16 @@ int classifyToken (char c);
 
 // parse input
 void parseTokens (Stack* &expressionTree) {
+  cout << "Enter an expression in infix: ";
   string input;
   getline (cin, input);
   // process tokens
   vector<char> tokens;
-  for (int i = 0; i < input.length(); i++) {
-    if (input[i] == " ") { continue; }
+  for (int i = 0; i < input.size(); i++) {
+    if (input[i] == *(" ")) { continue; }
     tokens.push_back(input[i]);
   }
+  
   // translate to postfix
   toPostfix(tokens, expressionTree);
   return;
@@ -38,25 +40,28 @@ void parseTokens (Stack* &expressionTree) {
 
 // after parsing tokens, translate to postfix notation
 void toPostfix (vector<char> tokens, Stack* &expressionTree) {
+  cout << "Calling toPostfix" << endl;
+
   vector<char> postfix;
-  Node* stackHead = new Node(), queueHead = new Node();
-  Stack* operatorStack = new Stack(stackHead);
-  Queue* outputQueue = new Queue(queueHead);
+  Stack* operatorStack = new Stack(NULL);
+  Queue* outputQueue = new Queue(NULL);
   
   for (int i = 0; i < tokens.size(); i++) {
     int precedence = classifyToken (tokens[i]);
 
     // number
-    if (precedence == 0) { outputQueue->enqueue(new Node(tokens[i])); }
+    if (precedence == 0) {
+      outputQueue->enqueue(new Node(tokens[i]));
+    }
 
     // operator
     else if (precedence >= 1 && precedence <= 3) {
       Node* op = operatorStack->peek();
-      if (op == NULL) { continue; }
-      // need to pop operators?
-      else {
-	while ((classifyToken (op->getValue()) > precedence) ||
-	       ((classifyToken (op->getValue()) == precedence) && precedence != 3)) {
+      if (op != NULL) {
+	while (op != NULL && op->getValue() != '(' &&
+	       ((classifyToken (op->getValue()) > precedence) ||
+	       ((classifyToken (op->getValue()) == precedence) &&
+		 precedence != 3))) {
 	  op = operatorStack->pop();
 	  outputQueue->enqueue(op);
 	  op = operatorStack->peek();
@@ -69,7 +74,9 @@ void toPostfix (vector<char> tokens, Stack* &expressionTree) {
     // parentheses
     else if (precedence == 4) {
       // left parentheses
-      if (tokens[i] == '(') { operatorStack->push(new Node(tokens[i])); }
+      if (tokens[i] == '(') {
+	operatorStack->push(new Node(tokens[i]));
+      }
       // right parentheses
       else {
 	Node* op = operatorStack->pop();
@@ -87,12 +94,19 @@ void toPostfix (vector<char> tokens, Stack* &expressionTree) {
     else { cout << "Bad input!" << endl; return; }
   }
 
+  cout << "Done." << endl;
+
   // clean up operator stack
   Node* op = operatorStack->pop();
   while (op != NULL && op->getValue() != '(') {
     outputQueue->enqueue(op);
     op = operatorStack->pop();
   }
+
+  cout << "Done with conversion" << endl;
+
+  // Node* cur = outputQueue->getHead();
+  // while (cur!=NULL) { cout << cur->getValue() << " "; cur = cur->getRight(); } cout << endl;
 
   // create expression tree
   createExpressionTree (outputQueue, expressionTree);
@@ -116,7 +130,11 @@ void createExpressionTree (Queue* &outputQueue, Stack* &expressionTree) {
       op->setRight (r);
       expressionTree->push(op);
     }
+
+    op = outputQueue->dequeue();
   }
+
+  cout << "Done with tree" << endl;
   
   return;
 }
@@ -176,10 +194,10 @@ void outputTree (Stack* &expressionTree) {
 // HELPER FUNCTIONS
 // print commands
 void printCmds () {
-  cout << "Commands:" << endl;
+  cout << endl << "Commands:" << endl;
   cout << "INPUT -- input new expression" << endl;
   cout << "OUTPUT -- output expression in prefix/postfix/infix" << endl;
-  cout << "QUIT -- quit the program" << endl;
+  cout << "QUIT -- quit the program" << endl << endl;
 }
 
 // classify as a number or operator
@@ -189,7 +207,7 @@ int classifyToken (char c) {
   // left-associative operator - A/S (precedence 1)
   else if (c == '-' || c == '+') { return 1; }
   // left-associative operator - M/D (precedence 2)
-  else if (c == '+' || c == '/') { return 2; }
+  else if (c == '*' || c == '/') { return 2; }
   // right-associative operator
   else if (c == '^') { return 3; }
   // parentheses
