@@ -17,6 +17,7 @@ void printInfix (Node* cur);
 void printCmds ();
 void outputTree (Stack* &expressionTree);
 int classifyToken (char c);
+void treeDisplay (Stack* &expressionTree);
 
 
 // SHUNTING YARD ALGORITHM FUNCTIONS
@@ -40,8 +41,6 @@ void parseTokens (Stack* &expressionTree) {
 
 // after parsing tokens, translate to postfix notation
 void toPostfix (vector<char> tokens, Stack* &expressionTree) {
-  cout << "Calling toPostfix" << endl;
-
   vector<char> postfix;
   Stack* operatorStack = new Stack(NULL);
   Queue* outputQueue = new Queue(NULL);
@@ -103,10 +102,9 @@ void toPostfix (vector<char> tokens, Stack* &expressionTree) {
     op = operatorStack->pop();
   }
 
-  cout << "Done with conversion" << endl;
-
-  // Node* cur = outputQueue->getHead();
-  // while (cur!=NULL) { cout << cur->getValue() << " "; cur = cur->getRight(); } cout << endl;
+  cout << "POSTFIX EXPRESSION: ";
+  Node* cur = outputQueue->getHead();
+  while (cur!=NULL) { cout << cur->getValue() << " "; cur = cur->getNext(); } cout << endl;
 
   // create expression tree
   createExpressionTree (outputQueue, expressionTree);
@@ -119,36 +117,59 @@ void createExpressionTree (Queue* &outputQueue, Stack* &expressionTree) {
   Node* op = outputQueue->dequeue();
   while (op != NULL) {
     // number
-    if (classifyToken (op->getValue()) == 0) { expressionTree->push(op); }
+    if (classifyToken (op->getValue()) == 0) { expressionTree->push(new Node(op->getValue())); }
 
     // operator
     else {
       Node* r = expressionTree->pop();
       Node* l = expressionTree->pop();
       if (r == NULL || l == NULL) { cout << "Bad input!" << endl; return; }
-      op->setLeft (l);
-      op->setRight (r);
-      expressionTree->push(op);
+      Node* o = new Node(op->getValue());
+      o->setLeft (l);
+      o->setRight (r);
+      expressionTree->push(o);
     }
 
     op = outputQueue->dequeue();
   }
 
-  cout << "Done with tree" << endl;
+  cout << "EXPRESSION TREE:" << endl;
+  treeDisplay (expressionTree);
   
   return;
 }
 
 
 // EXPRESSION TREE FUNCTIONS
+// display
+void display (Node* cur, int indent) {
+  if (cur == NULL) return;
+  display(cur->getRight(), indent + 1);
+  for (int i = 0; i < indent; i++) { cout << "    "; }
+  cout << cur->getValue() << endl;
+  display(cur->getLeft(), indent + 1);
+  return;
+}
+
+// to be honest, this function isn't necessary anymore
+// I needed to see everything on the stack while debugging,
+// so that's why it exists. I'm too lazy to change it
+void treeDisplay (Stack* &expressionTree) {
+  Node* cur = expressionTree->getHead();
+  while (cur != NULL) {
+    display (cur, 0); // BUG
+    cur = cur->getNext();
+  }
+  return;
+}
 
 // print postfix recursively
 void printPostfix (Node* cur) {
   if (cur->getLeft() != NULL && cur->getRight() != NULL) {
     printPostfix(cur->getLeft());
     printPostfix(cur->getRight());
-    cout << cur->getValue() << " ";
   }
+  cout << cur->getValue() << " ";
   return;
 }
 
@@ -179,6 +200,10 @@ void printInfix (Node* cur) {
 
 // output expression tree
 void outputTree (Stack* &expressionTree) {
+  if (expressionTree->getHead() == NULL) {
+    cout << "There's nothing here!";
+    return;
+  }
   cout << "What notation? (PREFIX/POSTFIX/INFIX)" << endl;
   string input;
   getline (cin, input);
@@ -220,8 +245,7 @@ int classifyToken (char c) {
 int main () {
   // main variables
   bool isRunning = true;
-  Node* head = new Node ();
-  Stack* expressionTree = new Stack(head);
+  Stack* expressionTree = new Stack(NULL);
   
   while (isRunning) {
     // user stuff
@@ -232,7 +256,10 @@ int main () {
     // QUIT
     if (input == "QUIT") { isRunning = false; }
     // INPUT
-    else if (input == "INPUT") { parseTokens(expressionTree); }
+    else if (input == "INPUT") {
+      expressionTree = new Stack(NULL);
+      parseTokens(expressionTree);
+    }
     // OUTPUT
     else if (input == "OUTPUT") { outputTree(expressionTree); }
     else { cout << "Bad input!" << endl; }

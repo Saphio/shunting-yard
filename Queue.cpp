@@ -19,10 +19,10 @@ void Queue::enqueue (Node* n) {
     head = n;
   }
   else {
-    while (cur->getRight() != NULL) {
-      cur = cur->getRight();
+    while (cur->getNext() != NULL) {
+      cur = cur->getNext();
     }
-    cur->setRight(n);
+    cur->setNext(n);
   }
   return;
 }
@@ -33,8 +33,12 @@ Node* Queue::dequeue () {
   if (head == NULL) { // nothing in the list
     return NULL;
   }
-  else { // head.getRight = NULL or has a value
-    head = head->getRight();
+  else if (head->getNext() == NULL) { // head exists, next does not
+    head = NULL;
+    return cur;
+  }
+  else { // head and next exist
+    head = head->getNext();
     return cur;
   }
 }

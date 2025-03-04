@@ -18,10 +18,10 @@ void Stack::push (Node* n) {
     head = n;
   }
   else {
-    while (cur->getRight() != NULL) {
-      cur = cur->getRight();
+    while (cur->getNext() != NULL) {
+      cur = cur->getNext();
     }
-    cur->setRight(n);
+    cur->setNext(n);
   }
   return;
 }
@@ -32,17 +32,17 @@ Node* Stack::pop () {
   if (head == NULL) {
     return NULL;
   }
-  else if (head->getRight() == NULL) {
+  else if (head->getNext() == NULL) {
     head = NULL;
     return cur;
   }
   else {
-    cur = cur->getRight();
-    while (cur->getRight() != NULL) {
-      cur = cur->getRight();
-      prev = prev->getRight();
+    cur = cur->getNext();
+    while (cur->getNext() != NULL) {
+      cur = cur->getNext();
+      prev = prev->getNext();
     }
-    prev->setRight(NULL);
+    prev->setNext(NULL);
     return cur;
   }
 }
@@ -53,8 +53,8 @@ Node* Stack::peek () {
     return NULL;
   }
   else {
-    while (cur->getRight() != NULL) {
-      cur = cur->getRight();
+    while (cur->getNext() != NULL) {
+      cur = cur->getNext();
     }
     return cur;
   }
